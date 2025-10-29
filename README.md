@@ -41,8 +41,9 @@ After cloning the repository, you must first run the `configure` script inside t
 
 ```sh
 git clone <repository-url> miniRT
-cd miniRT
-./minilibx_linux/configure
+cd miniRT/minilibx_linux/
+./configure
+cd ..
 make
 ```
 
