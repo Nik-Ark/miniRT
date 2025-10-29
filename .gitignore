@@ -1,0 +1,13 @@
+# Compiled object files:
+*.o
+
+# Compiled library files:
+libmlx.a
+
+# The final executable:
+miniRT
+
+# Object files inside the minilibx directories:
+minilibx_linux/*.o
+minilibx_linux/Makefile
+minilibx_opengl/*.o

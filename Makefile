@@ -10,9 +10,12 @@
 #                                                                              #
 # **************************************************************************** #
 
+NAME		= miniRT
 DIR_HEADERS	= ./includes/
-
 DIR_SRCS	= ./srcs/
+GCC			= gcc
+RM			= rm -f
+CFLAGS		= -Wall -Werror -Wextra -g
 
 SRC			=	image/image.c \
                 color_and_light/color.c color_and_light/light.c \
@@ -37,33 +40,47 @@ SRC			=	image/image.c \
 				main.c \
 
 SRCS		= $(addprefix $(DIR_SRCS), $(SRC))
-
 OBJS		= $(SRCS:.c=.o)
 
-NAME		= miniRT
+UNAME_S := $(shell uname -s)
 
-LIBMLX		= libmlx.a
+# macOS Configuration:
+ifeq ($(UNAME_S), Darwin)
+	MLX_DIR		= ./minilibx_opengl/
+	MLX_LIB		= $(MLX_DIR)libmlx.a
+	# Linker flags for macOS
+	LDFLAGS		= -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
+	MLX_INC		= -I$(MLX_DIR)
 
-GCC			= gcc
-RM			= rm -f
-CFLAGS		= -Wall -Werror -Wextra -g
+# Linux Configuration:
+else ifeq ($(UNAME_S), Linux)
+	MLX_DIR		= ./minilibx_linux/
+	MLX_LIB		= $(MLX_DIR)libmlx.a
+	# Linker flags for Linux (X11)
+	LDFLAGS		= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
+	MLX_INC		= -I$(MLX_DIR)
 
-%.o:%.c
-			$(GCC) $(CFLAGS) -I$(DIR_HEADERS) -Imlx -c $< -o $@
-
-$(NAME):	$(OBJS)
-			make -C ./minilibx_opengl
-			cp ./minilibx_opengl/libmlx.a .
-			$(GCC) $(CFLAGS) -L. -lmlx -framework OpenGL -framework AppKit -I./$(DIR_HEADERS) $(OBJS) -o $(NAME)
+# Unsupported OS:
+else
+	$(error Unsupported OS: $(UNAME_S))
+endif
 
 all:		$(NAME)
+
+$(NAME):	$(OBJS) $(MLX_LIB)
+			$(GCC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
+
+$(MLX_LIB):
+			make -C $(MLX_DIR)
+
+%.o:%.c
+			$(GCC) $(CFLAGS) -I$(DIR_HEADERS) $(MLX_INC) -c $< -o $@
 
 clean:
 			$(RM) $(OBJS)
 
 fclean:		clean
-			make clean -C ./minilibx_opengl
-			$(RM) $(LIBMLX)
+			make clean -C $(MLX_DIR)
 			$(RM) $(NAME)
 
 re:			fclean all
