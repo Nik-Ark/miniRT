@@ -11,3 +11,5 @@ miniRT
 minilibx_linux/*.o
 minilibx_linux/Makefile
 minilibx_opengl/*.o
+
+Makefile.gen
