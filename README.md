@@ -54,6 +54,9 @@ To run the program and display a scene in a window, execute the binary with a sc
 ```sh
 ./miniRT scenes/map.rt
 ```
+
+*To switch between cameras use arrows <- and ->, to close the programm hit esc button.*
+
 *(You can choose any scene from the `scenes/` directory. You can also modify the `.rt` files to add shapes, light sources, or change the camera.)*
 
 To render a scene and save it as a `.bmp` image file **without** opening a window, add the `--save` flag as a second argument:
