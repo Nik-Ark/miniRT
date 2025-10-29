@@ -48,7 +48,6 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
 	MLX_DIR		= ./minilibx_opengl/
 	MLX_LIB		= $(MLX_DIR)libmlx.a
-	# Linker flags for macOS
 	LDFLAGS		= -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
 	MLX_INC		= -I$(MLX_DIR)
 
@@ -56,7 +55,6 @@ ifeq ($(UNAME_S), Darwin)
 else ifeq ($(UNAME_S), Linux)
 	MLX_DIR		= ./minilibx_linux/
 	MLX_LIB		= $(MLX_DIR)libmlx.a
-	# Linker flags for Linux (X11)
 	LDFLAGS		= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
 	MLX_INC		= -I$(MLX_DIR)
 
@@ -80,7 +78,11 @@ clean:
 			$(RM) $(OBJS)
 
 fclean:		clean
-			make clean -C $(MLX_DIR)
+			@if [ "$(UNAME_S)" = "Darwin" ]; then \
+				make clean -C $(MLX_DIR); \
+			elif [ "$(UNAME_S)" = "Linux" ]; then \
+				$(RM) $(MLX_DIR)libmlx.a $(MLX_DIR)*.o; \
+			fi
 			$(RM) $(NAME)
 
 re:			fclean all

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "keys.h"
 
 int		main(int argc, char **argv)
 {
@@ -62,9 +63,9 @@ void	run_window(const char *filename_rt)
 
 int		key_actions(int key_code, t_mypar *par)
 {
-	if (key_code == 53)
+	if (key_code == KEY_ESC)
 		close_minirt();
-	if (key_code == 123 || key_code == 124)
+	if (key_code == KEY_LEFT || key_code == KEY_RIGHT)
 	{
 		if (cam_list_thing(key_code, par->scene))
 		{
@@ -86,7 +87,7 @@ int		key_actions(int key_code, t_mypar *par)
 
 int		cam_list_thing(int key_code, t_scene *scene)
 {
-	if (key_code == 124)
+	if (key_code == KEY_RIGHT)
 	{
 		if (scene->cam_lst->next)
 		{
@@ -97,7 +98,7 @@ int		cam_list_thing(int key_code, t_scene *scene)
 		else
 			write(1, "CURRENT CAMERA IS LAST\n", 23);
 	}
-	if (key_code == 123)
+	if (key_code == KEY_LEFT)
 	{
 		if (scene->cam_lst->prev)
 		{
